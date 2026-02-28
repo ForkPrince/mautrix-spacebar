@@ -20,6 +20,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/base64"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"html"
@@ -103,25 +104,46 @@ func decodeToken(token string) (userID int64, err error) {
 		err = fmt.Errorf("invalid number of parts in token")
 		return
 	}
-	var userIDStr []byte
-	userIDStr, err = base64.RawURLEncoding.DecodeString(parts[0])
+	// Validate all three parts are valid base64url.
+	var part0, part1 []byte
+	part0, err = base64.RawURLEncoding.DecodeString(parts[0])
 	if err != nil {
-		err = fmt.Errorf("invalid base64 in user ID part: %w", err)
+		err = fmt.Errorf("invalid base64 in first part: %w", err)
 		return
 	}
-	_, err = base64.RawURLEncoding.DecodeString(parts[1])
+	part1, err = base64.RawURLEncoding.DecodeString(parts[1])
 	if err != nil {
-		err = fmt.Errorf("invalid base64 in random part: %w", err)
+		err = fmt.Errorf("invalid base64 in second part: %w", err)
 		return
 	}
 	_, err = base64.RawURLEncoding.DecodeString(parts[2])
 	if err != nil {
-		err = fmt.Errorf("invalid base64 in checksum part: %w", err)
+		err = fmt.Errorf("invalid base64 in third part: %w", err)
 		return
 	}
-	userID, err = strconv.ParseInt(string(userIDStr), 10, 64)
+
+	// Try Discord token format: first part is a plain decimal user ID string.
+	if id, parseErr := strconv.ParseInt(string(part0), 10, 64); parseErr == nil {
+		userID = id
+		return
+	}
+
+	// Try Spacebar/JWT format: first part is a JWT header JSON object,
+	// second part is the JWT payload JSON containing the user ID.
+	var payload struct {
+		ID string `json:"id"`
+	}
+	if jsonErr := json.Unmarshal(part1, &payload); jsonErr != nil {
+		err = fmt.Errorf("token is neither a Discord token nor a valid JWT: %w", jsonErr)
+		return
+	}
+	if payload.ID == "" {
+		err = fmt.Errorf("JWT payload does not contain a user ID")
+		return
+	}
+	userID, err = strconv.ParseInt(payload.ID, 10, 64)
 	if err != nil {
-		err = fmt.Errorf("invalid number in decoded user ID part: %w", err)
+		err = fmt.Errorf("invalid user ID in JWT payload: %w", err)
 		return
 	}
 	return
