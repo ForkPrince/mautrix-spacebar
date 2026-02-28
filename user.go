@@ -592,6 +592,21 @@ func (user *User) Connect() error {
 		return err
 	}
 
+	// Workaround for Spacebar:
+	// Spacebar's gateway fails to process the Android 'IDENTIFY' payload that discordgo
+	// sends for User accounts, returning a 4004 Authentication Failed error because of a
+	// crash in handling ClientState or Capabilities.
+	// We reset the Identify payload to use standard Desktop properties.
+	if session.IsUser {
+		session.Identify.Capabilities = 0
+		session.Identify.ClientState = nil
+		session.Identify.Properties = discordgo.IdentifyProperties{
+			OS:      "linux",
+			Browser: "Discord Client",
+			Device:  "Discord Client",
+		}
+	}
+
 	if user.HeartbeatSession == nil || user.HeartbeatSession.IsExpired() {
 		user.log.Debug().Msg("Creating new heartbeat session")
 		sess := discordgo.NewHeartbeatSession()
