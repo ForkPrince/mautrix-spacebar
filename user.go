@@ -41,12 +41,41 @@ var (
 func applyDiscordEndpoints(api, cdn, status string) {
 	if api != "" {
 		discordgo.EndpointAPI = api
+		discordgo.EndpointGuilds = api + "guilds/"
+		discordgo.EndpointChannels = api + "channels/"
+		discordgo.EndpointUsers = api + "users/"
+		discordgo.EndpointGateway = api + "gateway"
+		discordgo.EndpointGatewayBot = api + "gateway/bot"
+		discordgo.EndpointWebhooks = api + "webhooks/"
+		discordgo.EndpointStickers = api + "stickers/"
+		discordgo.EndpointStageInstances = api + "stage-instances"
+		discordgo.EndpointSKUs = api + "skus"
+		discordgo.EndpointVoice = api + "/voice/"
+		discordgo.EndpointVoiceRegions = api + "/voice/regions"
+		discordgo.EndpointGuildCreate = api + "guilds"
+		discordgo.EndpointNitroStickersPacks = api + "/sticker-packs"
+		discordgo.EndpointApplications = api + "applications"
+		discordgo.EndpointOAuth2 = api + "oauth2/"
+		discordgo.EndpointOAuth2Applications = api + "oauth2/applications"
+		discordgo.EndpointOauth2 = api + "oauth2/"
+		discordgo.EndpointOauth2Applications = api + "oauth2/applications"
 	}
 	if cdn != "" {
 		discordgo.EndpointCDN = cdn
+		discordgo.EndpointCDNAttachments = cdn + "attachments/"
+		discordgo.EndpointCDNAvatars = cdn + "avatars/"
+		discordgo.EndpointCDNIcons = cdn + "icons/"
+		discordgo.EndpointCDNSplashes = cdn + "splashes/"
+		discordgo.EndpointCDNChannelIcons = cdn + "channel-icons/"
+		discordgo.EndpointCDNBanners = cdn + "banners/"
+		discordgo.EndpointCDNGuilds = cdn + "guilds/"
+		discordgo.EndpointCDNRoleIcons = cdn + "role-icons/"
 	}
 	if status != "" {
 		discordgo.EndpointStatus = status
+		discordgo.EndpointSm = status + "scheduled-maintenances/"
+		discordgo.EndpointSmActive = status + "scheduled-maintenances/active.json"
+		discordgo.EndpointSmUpcoming = status + "scheduled-maintenances/upcoming.json"
 	}
 }
 
