@@ -353,6 +353,16 @@ bridge:
         # Enable debug API at /debug with provisioning authentication.
         debug_endpoints: false
 
+    # Custom Discord API endpoints. Leave empty to use default Discord endpoints.
+    # This is useful for running against Discord-compatible APIs (like a custom gateway).
+    endpoints:
+        # Custom API endpoint (default: https://discord.com/api/v9/)
+        api:
+        # Custom CDN endpoint (default: https://cdn.discordapp.com/)
+        cdn:
+        # Custom status endpoint (default: https://status.discord.com/api/v2/)
+        status:
+
     # Permissions for using the bridge.
     # Permitted values:
     #    relay - Talk through the relaybot (if enabled), no access otherwise

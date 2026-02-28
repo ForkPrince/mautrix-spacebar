@@ -94,10 +94,18 @@ type BridgeConfig struct {
 
 	Permissions bridgeconfig.PermissionConfig `yaml:"permissions"`
 
-	usernameTemplate    *template.Template `yaml:"-"`
-	displaynameTemplate *template.Template `yaml:"-"`
-	channelNameTemplate *template.Template `yaml:"-"`
-	guildNameTemplate   *template.Template `yaml:"-"`
+	Endpoints EndpointsConfig `yaml:"endpoints"`
+
+	usernameTemplate     *template.Template `yaml:"-"`
+	displaynameTemplate  *template.Template `yaml:"-"`
+	channelNameTemplate  *template.Template `yaml:"-"`
+	guildNameTemplate    *template.Template `yaml:"-"`
+}
+
+type EndpointsConfig struct {
+	API    string `yaml:"api"`
+	CDN    string `yaml:"cdn"`
+	Status string `yaml:"status"`
 }
 
 type DirectMedia struct {

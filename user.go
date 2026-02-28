@@ -38,6 +38,18 @@ var (
 	ErrNotLoggedIn  = errors.New("not logged in")
 )
 
+func applyDiscordEndpoints(api, cdn, status string) {
+	if api != "" {
+		discordgo.EndpointAPI = api
+	}
+	if cdn != "" {
+		discordgo.EndpointCDN = cdn
+	}
+	if status != "" {
+		discordgo.EndpointStatus = status
+	}
+}
+
 type User struct {
 	*database.User
 

@@ -102,6 +102,8 @@ func (br *DiscordBridge) Init() {
 
 	br.DB = database.New(br.Bridge.DB, br.Log.Sub("Database"))
 	discordLog = br.ZLog.With().Str("component", "discordgo").Logger()
+
+	applyDiscordEndpoints(br.Config.Bridge.Endpoints.API, br.Config.Bridge.Endpoints.CDN, br.Config.Bridge.Endpoints.Status)
 }
 
 func (br *DiscordBridge) Start() {
